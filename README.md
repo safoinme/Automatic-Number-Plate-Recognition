@@ -53,12 +53,13 @@ The first model was trained to detect the licence plate to be then cropped from 
     
 <p align="center">  
     <img src="https://www.saagie.com/wp-content/uploads/2017/11/h8Ifk0P.png"/>
-    </p>
+</p>
     
 - ##### Modeling
 Training a first Faster-RCNN model only to detect licence plates. 
+<p align="center">  
 <img src="https://i.ibb.co/xzfRFdN/Screenshot-2021-12-24-at-18-57-17.png" width="500"/>
-
+<p>
 
  And a second trained separately only to detect characters on cropped images of the licence plates.
  
