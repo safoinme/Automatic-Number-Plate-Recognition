@@ -58,14 +58,15 @@ Training a first Faster-RCNN model only to detect licence plates.
 
 
  And a second trained separately only to detect characters on cropped images of the licence plates.
-    
+<p align="center">    
 <img src="https://i.ibb.co/58xJP0K/Screenshot-2021-12-24-at-18-57-28.png" width="500"/>
-	
+</p>	
 The both models were pretrained on the COCO dataset, because we didn’t have enough data, therefor it would only make sense to take the advantage of transfer learning of models that were trained on such a rich dataset.
 
 - ##### Post-Processing
     Now we have a good model that can detect the majority of the characters in Licence Plates, the work is not done yet, because our model returns the boxes of detected characters, without taking the order in consideration. So we had to do a post-processing algorithm that can return the licence plate characters in the right order.
     1. Split characters based on median of Y-Min of all detected characters boxes, by taking characters where their Y-Max is smaller than Median-Y-Mins into a string called top-characters, and those who have Y-Max greater than Median-Y-Mins will be in bottom_characters.
     2. Order characters in top and bottom list from left to right based on the X_Min of the detected Box of each character.
-    
+<p align="center">    
 <img src="https://i.ibb.co/vxNZdR9/Screenshot-2021-12-24-at-18-59-43.png" width="200"/>
+</p>
