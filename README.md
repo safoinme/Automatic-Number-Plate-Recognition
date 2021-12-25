@@ -33,7 +33,7 @@ For each plate corresponds a string (series of numbers and latin characters) lab
 - etc.
 
 We offer the plate strings of 450 images (training set). The remaining 204 unlabeled images will be the test set. The participants are asked to provide the plate strings in the test set.
-
+<br>
 ![image](https://i.ibb.co/xJs0S0p/imgonline-com-ua-twotoone-Dj-IGel2-QUEVg.jpg)
 
 ### Our Approach
@@ -50,7 +50,10 @@ The first model was trained to detect the licence plate to be then cropped from 
     
     We have choose faster-rcnn model for both Object detection tasks, using library called detectron2 based on Pytorch and developed by FaceBook AI Research Laboratory (FAIR).
     A Faster R-CNN object detection network is composed of a feature extraction network which is typically a pretrained CNN, similar to what we had used for its predecessor. This is then followed by two subnetworks which are trainable. The first is a Region Proposal Network (RPN), which is, as its name suggests, used to generate object proposals and the second is used to predict the actual class of the object. So the primary differentiator for Faster R-CNN is the RPN which is inserted after the last convolutional layer. This is trained to produce region proposals directly without the need for any external mechanism like Selective Search. After this we use ROI pooling and an upstream classifier and bounding box regressor similar to Fast R-CNN.
-    ![image](https://www.saagie.com/wp-content/uploads/2017/11/h8Ifk0P.png )
+    
+<p align="center">  
+    <img src="https://www.saagie.com/wp-content/uploads/2017/11/h8Ifk0P.png"/>
+    </p>
     
 - ##### Modeling
 Training a first Faster-RCNN model only to detect licence plates. 
@@ -58,9 +61,11 @@ Training a first Faster-RCNN model only to detect licence plates.
 
 
  And a second trained separately only to detect characters on cropped images of the licence plates.
+ 
 <p align="center">    
 <img src="https://i.ibb.co/58xJP0K/Screenshot-2021-12-24-at-18-57-28.png" width="500"/>
 </p>	
+
 The both models were pretrained on the COCO dataset, because we didn’t have enough data, therefor it would only make sense to take the advantage of transfer learning of models that were trained on such a rich dataset.
 
 - ##### Post-Processing
