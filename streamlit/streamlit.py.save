@@ -13,6 +13,7 @@ st.title('MoroccoAI Data Challenge : Automatic Number Plate Recognition (ANPR) i
 # fastapi endpoint
 url = 'http://168.61.19.23:8000'
 endpoint = '/platedetector'
+
 endpoint2 = '/plateocr'
 
 st.write('''This application is a demo result of our work in the comepetiton organized by MoroccoAI in the context of the first MoroccoAI Data Challenge. 
@@ -43,13 +44,12 @@ if st.button('Get Plate detected'):
     st.image(io.BytesIO(res.content))
 
 if st.button('Get Plate OCR'):
-    res = process(image, url+endpoint2)
-    #z = zipfile.ZipFile(io.BytesIO(res.content))
-    #z.extractall()
-    #image_list = []
-    #for filename in glob.glob('*.jpg'):
-    #    im=Image.open(filename)
-    #    image_list.append(im)
-    st.image(io.BytesIO(res.content), width=300) # output dyptich
-    #for filename in glob.glob('*.jpg'):
-    #    os.remove(filename)
+    z = zipfile.ZipFile(io.BytesIO(r.content))
+    z.extractall()
+    image_list = []
+    for filename in glob.glob('*.png'):
+        im=Image.open(filename)
+        image_list.append(im)
+    st.image(image_list, width=300) # output dyptich
+    for filename in glob.glob('*.png'):
+        os.remove(filename)

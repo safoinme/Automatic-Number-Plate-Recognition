@@ -9,6 +9,8 @@ import numpy as np
 import base64
 from fastapi.staticfiles import StaticFiles
 from starlette.responses import FileResponse
+from zipfile import ZipFile
+
 #model = get_segmentator()
 plate_model = PlateDetector()
 ocr_model = PlateOCR()
@@ -27,18 +29,27 @@ async def get_plate_detection(file: UploadFile = File(...)):
     image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     image = image[:,:,::-1].copy()
     output = plate_model.predict(image)
-    plate_boxes = plate_model.plateBoxes(output)
+    #plate_boxes = plate_model.plateBoxes(output)
     output_image = plate_model.detectedPlateSaver(image, output)
     return FileResponse(output_image)
 
-"""
+
 @app.post("/plateocr", response_class=ORJSONResponse)
-def get_plate_ocr(file: bytes = File(...)):
-    image = cv2.imread(io.BytesIO(file))
+async def get_plate_ocr(file: UploadFile = File(...)):
+    contents = await file.read()
+    nparr = np.fromstring(contents, np.uint8)
+    image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     image = image[:,:,::-1].copy()
-    plate_boxes = get_plate_detection(file)
     output = plate_model.predict(image)
     plate_boxes = plate_model.plateBoxes(output)
-    output_image = plate_model.detectedPlateSaver(image, output)
-    return [{"plate_boxes": plate_boxes, "output_image": output_image}]
-"""
+    plates = ocr_model.plateBoxesLoader(image,plate_boxes)
+    ocr_images = []
+    ocr_strings = []
+    for plate in plates:
+        ocr_output = ocr_model.predict(plate)
+        ocr_images.append(ocr_model.detectedCharacterSaver(plate,ocr_output))
+        ocr_strings.append(ocr_model.postProcess(plate,ocr_output))
+    with ZipFile('ocr_plates.zip', 'w') as zipObj:
+        for ocr_image in ocr_images:
+            zipObj.write(ocr_image)
+    return FileResponse(ocr_images[0])
