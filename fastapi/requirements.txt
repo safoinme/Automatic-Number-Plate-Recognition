@@ -3,3 +3,4 @@ opencv-python==4.1.2.30
 fastapi
 python-multipart
 pycocotools
+orjson==3.6.5

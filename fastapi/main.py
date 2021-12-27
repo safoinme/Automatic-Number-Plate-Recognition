@@ -6,6 +6,7 @@ import io
 import os, json, cv2, uuid , statistics
 from PIL import Image
 import numpy as np
+import base64
 
 #model = get_segmentator()
 plate_model = PlateDetector()
@@ -26,7 +27,6 @@ async def get_plate_detection(file: UploadFile = File(...)):
     output = plate_model.predict(image)
     plate_boxes = plate_model.plateBoxes(output)
     output_image = plate_model.detectedPlateSaver(image, output)
-
     return [{"plate_boxes": plate_boxes, "output_image": output_image}]
 
 """
@@ -38,6 +38,5 @@ def get_plate_ocr(file: bytes = File(...)):
     output = plate_model.predict(image)
     plate_boxes = plate_model.plateBoxes(output)
     output_image = plate_model.detectedPlateSaver(image, output)
-
     return [{"plate_boxes": plate_boxes, "output_image": output_image}]
 """

@@ -11,7 +11,7 @@ import os
 st.title('MoroccoAI Data Challenge : Automatic Number Plate Recognition (ANPR) in Morocco Licensed Vehicles.')
 
 # fastapi endpoint
-url = 'http://0.0.0.0:8000'
+url = 'http://168.61.19.23:8000'
 endpoint = '/platedetector'
 
 st.write('''This application is a demo result of our work in the comepetiton organized by MoroccoAI in the context of the first MoroccoAI Data Challenge. 
@@ -34,6 +34,6 @@ def process(image, server_url: str):
     return r
 
 
-if st.button('Get segmentation map'):
+if st.button('Get Plate detected'):
     res = process(image, url+endpoint)
-    st.text(res)
+    st.text(res.content)

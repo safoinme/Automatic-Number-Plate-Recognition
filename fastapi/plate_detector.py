@@ -4,6 +4,7 @@
 Created on Sat Dec 26 02:27:36 2021
 @author: Safoine EL KHABICH "TTM" <https://www.linkedin.com/in/safoinme/>
 """
+
 import detectron2
 from detectron2.engine import DefaultTrainer
 from detectron2.config import get_cfg
