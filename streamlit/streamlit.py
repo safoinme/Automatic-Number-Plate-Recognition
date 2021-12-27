@@ -6,7 +6,7 @@ import io
 import zipfile
 import glob
 import os
-
+import json
 
 st.title('MoroccoAI Data Challenge : Automatic Number Plate Recognition (ANPR) in Morocco Licensed Vehicles.')
 
@@ -36,4 +36,7 @@ def process(image, server_url: str):
 
 if st.button('Get Plate detected'):
     res = process(image, url+endpoint)
-    st.text(res.content)
+    #rejs = json.loads(res.text)
+    print(io.BytesIO(res.content))
+    #print(res.request.body)
+    st.image(io.BytesIO(res.content))
