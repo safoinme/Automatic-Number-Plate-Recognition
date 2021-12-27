@@ -35,7 +35,7 @@ class PlateDetector:
         self._cfg.SOLVER.IMS_PER_BATCH = 2
         self._cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 128   # faster, and good enough for this toy dataset (default: 512)
         self._cfg.MODEL.ROI_HEADS.NUM_CLASSES = 1
-        self._cfg.MODEL.WEIGHTS = os.path.join("../weights/plate_detector", "model_final.pth")  # path to the model we just trained
+        self._cfg.MODEL.WEIGHTS = os.path.join("./weights/plate_detector", "model_final.pth")  # path to the model we just trained
         self._cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.9
         return DefaultPredictor(self._cfg)
     
@@ -47,7 +47,7 @@ class PlateDetector:
     """
     This method takes the prediction result and return boxes and scores
     """
-    def plateExtractor(self, output):
+    def plateBoxes(self, output):
         boxes = output['instances'].pred_boxes.tensor.cpu().numpy().tolist() 
         scores = output['instances'].scores.numpy().tolist()
         if len(scores)>0: 
@@ -56,7 +56,7 @@ class PlateDetector:
     """
     This method takes the image & the prediction result and return image with boxes of plates
     """
-    def detectedImage(self, image, output):
+    def detectedPlateSaver(self, image, output):
         visual = Visualizer(image[:, :, ::-1],
                    metadata=self._class, 
                    scale=0.5, 

@@ -1,4 +1,4 @@
-from fastapi import FastAPI , File
+from fastapi import FastAPI ,  File, UploadFile
 from fastapi.responses import ORJSONResponse
 from plate_detector import PlateDetector
 from plate_ocr import PlateOCR
@@ -18,8 +18,10 @@ app = FastAPI(title="MoroccoAI Data Challenge",
 
 
 @app.post("/platedetector", response_class=ORJSONResponse)
-def get_plate_detection(file: bytes = File(...)):
-    image = cv2.imread(io.BytesIO(file))
+async def get_plate_detection(file: UploadFile = File(...)):
+    contents = await file.read()
+    nparr = np.fromstring(contents, np.uint8)
+    image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
     image = image[:,:,::-1].copy()
     output = plate_model.predict(image)
     plate_boxes = plate_model.plateBoxes(output)

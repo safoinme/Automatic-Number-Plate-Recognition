@@ -36,7 +36,7 @@ class PlateOCR:
         self._cfg.SOLVER.IMS_PER_BATCH = 2
         self._cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 512  # faster, and good enough for this toy dataset (default: 512)
         self._cfg.MODEL.ROI_HEADS.NUM_CLASSES = 20
-        self._cfg.MODEL.WEIGHTS = os.path.join("../weights/plate_ocr", "model_final.pth")  # path to the model we just trained
+        self._cfg.MODEL.WEIGHTS = os.path.join("./weights/plate_ocr", "model_final.pth")  # path to the model we just trained
         self._cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.8
         return DefaultPredictor(self._cfg)
     
@@ -46,9 +46,9 @@ class PlateOCR:
     def predict(self, image):
         return self._predictor(image)
     """
-    This method Loads plates images only from original images using plateExtractor to extract the exact plate
+    This method Loads plates boxes images only from original images using plateBoxes to extract the exact plate
     """
-    def plateLoader(self, image, plates):
+    def plateBoxesLoader(self, image, plates):
         plateImages = []
         for plate in plates.values():
             boxes = plate['boxes']
@@ -57,7 +57,7 @@ class PlateOCR:
     """
     This method takes the prediction result and return boxes and scores
     """
-    def ocrExtractor(self, output):
+    def characterBoxes(self, output):
         boxes = output['instances'].pred_boxes.tensor.cpu().numpy().tolist() 
         scores = output['instances'].scores.numpy().tolist()
         classes = output['instances'].pred_classes.to('cpu').tolist()
@@ -67,7 +67,7 @@ class PlateOCR:
     """
     This method takes the image & the prediction result and return image with boxes of plates
     """
-    def detectedImagesaver(self, image, output):
+    def detectedCharacterSaver(self, image, output):
         visual = Visualizer(image[:, :, ::-1],
                    metadata=self._class, 
                    scale=0.5, 
