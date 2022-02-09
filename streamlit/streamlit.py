@@ -11,9 +11,10 @@ import json
 st.title('MoroccoAI Data Challenge : Automatic Number Plate Recognition (ANPR) in Morocco Licensed Vehicles.')
 
 # fastapi endpoint
-url = 'http://168.61.19.23:8000'
+url = 'http://13.87.133.185:8000'
 endpoint = '/platedetector'
 endpoint2 = '/plateocr'
+endpoint3 = '/plate_string'
 
 st.write('''This application is a demo result of our work in the comepetiton organized by MoroccoAI in the context of the first MoroccoAI Data Challenge. 
 it takes an image that contains one or multiple cars and return the plates and the recognized characters on each plate''') # description and instructions
@@ -37,19 +38,11 @@ def process(image, server_url: str):
 
 if st.button('Get Plate detected'):
     res = process(image, url+endpoint)
-    #rejs = json.loads(res.text)
-    print(io.BytesIO(res.content))
-    #print(res.request.body)
-    st.image(io.BytesIO(res.content))
+    res1= process(image, url+endpoint3)
+    res2= process(image, url+endpoint2)
+    col1, col2 = st.columns(2)
+    with col1:
+        p = res1.content.decode('UTF-8')
+        st.header(p[1:-1])
+        st.image(io.BytesIO(res.content))
 
-if st.button('Get Plate OCR'):
-    res = process(image, url+endpoint2)
-    #z = zipfile.ZipFile(io.BytesIO(res.content))
-    #z.extractall()
-    #image_list = []
-    #for filename in glob.glob('*.jpg'):
-    #    im=Image.open(filename)
-    #    image_list.append(im)
-    st.image(io.BytesIO(res.content), width=300) # output dyptich
-    #for filename in glob.glob('*.jpg'):
-    #    os.remove(filename)

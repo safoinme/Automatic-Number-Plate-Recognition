@@ -31,31 +31,9 @@ async def get_plate_detection(file: UploadFile = File(...)):
     output = plate_model.predict(image)
     #plate_boxes = plate_model.plateBoxes(output)
     output_image = plate_model.detectedPlateSaver(image, output)
-    #output_image = cv2.cvtColor(output_image, cv2.COLOR_BGR2RGB)
     return FileResponse(output_image)
 
 
-@app.post("/plate_string", response_class=ORJSONResponse)
-async def get_plate_string(file: UploadFile = File(...)):
-    contents = await file.read()
-    nparr = np.fromstring(contents, np.uint8)
-    image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-    image = image[:,:,::-1].copy()
-    output = plate_model.predict(image)
-    plate_boxes = plate_model.plateBoxes(output)
-    plates = ocr_model.plateBoxesLoader(image,plate_boxes)
-    ocr_images = []
-    ocr_strings = []
-    for plate in plates:
-        ocr_output = ocr_model.predict(plate)
-        character_boxes = ocr_model.characterBoxes(ocr_output)
-        ocr_images.append(ocr_model.detectedCharacterSaver(plate,ocr_output))
-        ocr_strings.append(ocr_model.postProcess(plate,character_boxes))
-    #with ZipFile('ocr_plates.zip', 'w') as zipObj:
-    #    for ocr_image in ocr_images:
-    #        zipObj.write(ocr_image)
-    #return FileResponse(ocr_images[0])
-    return ocr_strings[0]['plate_string']
 @app.post("/plateocr", response_class=ORJSONResponse)
 async def get_plate_ocr(file: UploadFile = File(...)):
     contents = await file.read()
@@ -76,4 +54,3 @@ async def get_plate_ocr(file: UploadFile = File(...)):
     #    for ocr_image in ocr_images:
     #        zipObj.write(ocr_image)
     return FileResponse(ocr_images[0])
-    #return ocr_strings[0]['plate_string']

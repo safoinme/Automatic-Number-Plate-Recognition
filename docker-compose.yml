@@ -20,5 +20,5 @@ services:
     container_name: streamlit
 
 networks:
-  deploy_network:
-    driver: bridge
+    deploy_network:
+        driver: bridge

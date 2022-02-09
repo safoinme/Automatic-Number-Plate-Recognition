@@ -1,0 +1,39 @@
+from plate_detector import PlateDetector
+from plate_ocr import PlateOCR
+import io
+import os, json, cv2, uuid , statistics
+from PIL import Image
+import numpy as np
+import base64
+import streamlit as st
+#model = get_segmentator()
+plate_model = PlateDetector()
+ocr_model = PlateOCR()
+
+
+def get_plate_detection(image):
+    #nparr = np.fromstring(image, np.uint8)
+    #image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+    image = Image.open(image)
+    image = np.array(image)
+    #image = image[:,:,::-1].copy()
+    output = plate_model.predict(image)
+    output_image = plate_model.detectedPlateSaver(image, output)
+    #plate_boxes = plate_model.plateBoxes(output)
+    st.image(output_image)
+
+def get_plate_ocr(image):
+    image = Image.open(image)
+    image = np.array(image.convert('RGB'))
+    output = plate_model.predict(image)
+    plate_boxes = plate_model.plateBoxes(output)
+    plates = ocr_model.plateBoxesLoader(image,plate_boxes)
+    ocr_images = []
+    ocr_strings = []
+    for plate in plates:
+        ocr_output = ocr_model.predict(plate)
+        character_boxes = ocr_model.characterBoxes(ocr_output)
+        ocr_images.append(ocr_model.detectedCharacterSaver(plate,ocr_output))
+        ocr_strings.append(ocr_model.postProcess(plate,character_boxes))
+    st.write(ocr_strings[0])
+    st.imag

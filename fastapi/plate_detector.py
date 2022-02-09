@@ -65,5 +65,6 @@ class PlateDetector:
         )
         visual_output = visual.draw_instance_predictions(output["instances"])
         output_image = os.path.join("./images/plate_detector", str(uuid.uuid4())+".jpg")
-        cv2.imwrite(output_image,visual_output.get_image()[:, :, ::-1])
+        output = cv2.cvtColor(visual_output.get_image()[:, :, ::-1], cv2.COLOR_BGR2RGB)
+        cv2.imwrite(output_image,output)
         return (output_image)
